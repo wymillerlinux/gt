@@ -1,0 +1,6 @@
+{
+    "api_token": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "base_api": "/api/v1",
+    "base_url": "https://www.example.com",
+    "username": "jimmyjoebob"
+}
