@@ -1,48 +1,53 @@
 // gt - a gitea cli client
 // Written by Wyatt J. Miller
 // All right reserved, 2020
+// Licensed by the MPL v2
 
-use clap::{Arg, App, SubCommand};
+mod arg;
+mod config;
+mod issue;
+mod repo;
+
+use clap::{ArgMatches};
 
 fn main() {
-    let matches = App::new("gt - A Gitea CLI client")
-                                .version("0.0.1")
-                                .author("Wyatt J. Miller <wjmiller2016@gmail.com>")
-                                .about("It's a CLI client, what do you expect?")
-                                .subcommand(SubCommand::with_name("repo")
-                                        .about("Create, delete, or fork a repo")
-                                        .arg(Arg::with_name("create")
-                                                .short("c")
-                                                .long("create")
-                                                .value_names(&["OWNER", "REPO"])
-                                                .help("Create a repo"))
-                                        .arg(Arg::with_name("delete")
-                                                .short("d")
-                                                .long("delete")
-                                                .value_names(&["OWNER", "REPO"])
-                                                .help("Delete a repo"))
-                                        .arg(Arg::with_name("fork")
-                                                .short("f")
-                                                .long("fork")
-                                                .value_names(&["OWNER", "REPO", "FORKED_OWNER", "FORKED_REPO"])
-                                                .help("Fork a repo")))
-                                .get_matches();
+    let matches: ArgMatches = arg::get_args();
+    let config = crate::config::Configuration::new();
 
     match matches.subcommand() {
+        ("", None) => println!("No subcommand was given!"),
         ("repo", Some(repo_matches)) => {
+            let repo = repo::Repository::new();
+
+            // TODO: match expression should be here
             if repo_matches.is_present("create") {
-                println!("\"repo create\" passed")
+                repo.create_repo(&config, repo_matches);
             }
 
             if repo_matches.is_present("delete") {
-                println!("\"repo delete\" passed")
+                repo.delete_repo(&config, repo_matches);
             }
 
             if repo_matches.is_present("fork") {
-                println!("\"repo fork\" passed")
+                repo.fork_repo(&config, repo_matches)
             }
-        }
-        ("", None) => println!("No subcommand was given!"),
-        _ => unreachable!()
+
+            if repo_matches.is_present("search") {
+                repo.search_repo(&config, repo_matches)
+            }
+            
+            if repo_matches.is_present("list") {
+                repo.list_repo(&config)
+            }
+        },
+        ("issue", Some(issue_matches)) => {
+            let issue = issue::Issue::new();
+
+            // TODO: match expression should be here
+            if issue_matches.is_present("create") {
+                issue.create_issue(&config, issue_matches);
+            }
+        },
+        _ => println!("Huh?")
     }
 }
