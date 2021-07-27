@@ -1,14 +1,15 @@
 use std::env;
 
 use config::File;
-use serde::{Deserialize};
+use serde::Deserialize;
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct Configuration {
-    pub api_token: String,
+    pub api_token: Option<String>,
     pub base_api: String,
     pub base_url: String,
-    pub username: Option<String>
+    pub username: Option<String>,
+    pub password: Option<String>
 }
 
 impl Configuration {

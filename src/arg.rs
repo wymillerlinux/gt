@@ -18,7 +18,7 @@ pub fn get_args() -> ArgMatches<'static> {
                                 .arg(Arg::with_name("search")
                                         .short("s")
                                         .long("search")
-                                        .value_name("REPO")
+                                        .value_names(&["REPO"])
                                         .help("Search repositories for a user")
                                     )
                                 .arg(Arg::with_name("list")

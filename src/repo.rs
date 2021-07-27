@@ -6,6 +6,7 @@ use reqwest::{StatusCode, Client};
 use serde_derive::{Serialize, Deserialize};
 
 use crate::config::Configuration;
+use crate::request::Request;
 
 pub struct Repository;
 
@@ -102,14 +103,17 @@ impl Repository {
         Repository {}
     }
 
-    pub fn create_repo(&self, config: &Configuration, arg: &ArgMatches) {
-        let client = Client::new();
-        let arg_value = arg.value_of("create").unwrap();
+    pub fn create_repo(&self, request: &Request) {
+        let client = &request.client;
+        let arg_value = request.arg_value.subcommand().1.unwrap().value_of("create").unwrap();
         let mut map: HashMap<&str, &str> = HashMap::new();
-        let url = format!("{base_url}{base_api}/user/repos?token={api_token}",
-            base_url = config.base_url,
-            base_api = config.base_api,
-            api_token = config.api_token);
+        let url = format!("{request}/user/repos?token={api_token}",
+            request = request.url.as_ref().unwrap(),
+            api_token = request
+                .authentication
+                .credentials
+                .1.as_ref()
+                .unwrap());
 
         map.insert("name", arg_value);
         map.insert("readme", arg_value);
@@ -147,7 +151,7 @@ impl Repository {
             base_api = config.base_api,
             username = arg_iter[0],
             repo_name = arg_iter[1],
-            api_token = config.api_token);
+            api_token = config.api_token.as_ref().unwrap());
 
         let response = client.delete(&url)
             .send();
@@ -182,7 +186,7 @@ impl Repository {
             base_api = config.base_api,
             owner = arg_item[0],
             repo = arg_item[1],
-            api_token = config.api_token);
+            api_token = config.api_token.as_ref().unwrap());
 
         map.insert("name", user.as_str());
 
@@ -216,7 +220,7 @@ impl Repository {
             base_url = config.base_url,
             base_api = config.base_api,
             query = arg_value,
-            api_token = config.api_token);
+            api_token = config.api_token.as_ref().unwrap());
 
         let response = client.get(url.as_str())
             .send();
@@ -255,7 +259,7 @@ impl Repository {
         let url = format!("{base_url}{base_api}/repos/search?token={api_token}",
             base_url = config.base_url,
             base_api = config.base_api,
-            api_token = config.api_token);
+            api_token = config.api_token.as_ref().unwrap());
 
         let response = client.get(url.as_str())
             .send();

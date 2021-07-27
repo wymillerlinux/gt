@@ -7,21 +7,25 @@ mod arg;
 mod config;
 mod issue;
 mod repo;
+mod request;
 
-use clap::{ArgMatches};
+use clap::ArgMatches;
 
 fn main() {
-    let matches: ArgMatches = arg::get_args();
-    let config = crate::config::Configuration::new();
+    let mut matches: ArgMatches = arg::get_args();
+    let mut config = crate::config::Configuration::new();
+   
+    let auth = request::Authentication::new(&config);
+    let request = auth.request_chooser(config.clone(), matches);
 
-    match matches.subcommand() {
+    match request.arg_value.subcommand() {
         ("", None) => println!("No subcommand was given!"),
         ("repo", Some(repo_matches)) => {
             let repo = repo::Repository::new();
 
             // TODO: match expression should be here
             if repo_matches.is_present("create") {
-                repo.create_repo(&config, repo_matches);
+                repo.create_repo(&request);
             }
 
             if repo_matches.is_present("delete") {
@@ -51,3 +55,4 @@ fn main() {
         _ => println!("Huh?")
     }
 }
+
