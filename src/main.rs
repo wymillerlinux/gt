@@ -1,6 +1,6 @@
 // gt - a gitea cli client
 // Written by Wyatt J. Miller
-// All right reserved, 2020
+// All right reserved, 2020 - 2021
 // Licensed by the MPL v2
 
 mod arg;
@@ -12,8 +12,8 @@ mod request;
 use clap::ArgMatches;
 
 fn main() {
-    let mut matches: ArgMatches = arg::get_args();
-    let mut config = crate::config::Configuration::new();
+    let matches: ArgMatches = arg::get_args();
+    let config = crate::config::Configuration::new();
    
     let auth = request::Authentication::new(&config);
     let request = auth.request_chooser(config.clone(), matches);

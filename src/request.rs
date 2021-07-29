@@ -57,28 +57,30 @@ impl Authentication{
     /// secure methods. Currently, only two methods are supported: API token, and 
     /// username/password combo.
     pub fn new(config: &Configuration) -> Authentication {
-        let basic_auth: String;
-        let api_auth: String;
-
         // TODO: might be broken, haven't tested
         // this is horror code, I know it
         // match the damn thing
         // someone is going to take this and put it in r/badcode lol
-        basic_auth = config
-                        .password
-                        .as_ref()
-                        .unwrap()
-                        .to_string();
+        let basic_auth = config
+            .password
+            .as_ref()
+            .unwrap()
+            .to_string();
 
-        api_auth = config
-                        .api_token
-                        .as_ref()
-                        .unwrap()
-                        .to_string();
+        let api_auth = config
+            .api_token
+            .as_ref()
+            .unwrap()
+            .to_string();
         
         if api_auth.is_empty() {
             if !(basic_auth.is_empty()) {
-                Authentication::with_basic(config.username.as_ref().unwrap().to_string(), basic_auth)
+                Authentication::with_basic(config
+                    .username
+                    .as_ref()
+                    .unwrap()
+                    .to_string(), 
+                    basic_auth)
             } else {
                 panic!("Must have some form of authentication! Exiting...");
             }
