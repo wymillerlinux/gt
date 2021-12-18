@@ -14,7 +14,6 @@ use clap::ArgMatches;
 fn main() {
     let matches: ArgMatches = arg::get_args();
     let config = crate::config::Configuration::new();
-   
     let auth = request::Authentication::new(&config);
     let request = auth.request_chooser(config.clone(), matches);
 
@@ -29,21 +28,21 @@ fn main() {
             }
 
             if repo_matches.is_present("delete") {
-                repo.delete_repo(&config, repo_matches);
+                repo.delete_repo(&request);
             }
 
             if repo_matches.is_present("fork") {
-                repo.fork_repo(&config, repo_matches)
+                repo.fork_repo(&request)
             }
 
             if repo_matches.is_present("search") {
-                repo.search_repo(&config, repo_matches)
+                repo.search_repo(&request)
             }
-            
+
             if repo_matches.is_present("list") {
-                repo.list_repo(&config)
+                repo.list_repo(&request)
             }
-        },
+        }
         ("issue", Some(issue_matches)) => {
             let issue = issue::Issue::new();
 
@@ -51,8 +50,7 @@ fn main() {
             if issue_matches.is_present("create") {
                 issue.create_issue(&config, issue_matches);
             }
-        },
-        _ => println!("Huh?")
+        }
+        _ => println!("Huh?"),
     }
 }
-

@@ -9,7 +9,7 @@ pub struct Configuration {
     pub base_api: String,
     pub base_url: String,
     pub username: Option<String>,
-    pub password: Option<String>
+    pub password: Option<String>,
 }
 
 impl Configuration {
@@ -17,16 +17,14 @@ impl Configuration {
         let home_dir_env = env::var("HOME").unwrap();
         let mut settings = config::Config::default();
         let mut location: Vec<String> = Vec::new();
-        
+
         // TODO: add condition for target os
         location.push("config.json".to_string());
         location.push("/etc/gt/config.json".to_string());
         location.push(format!("{}/.config/gt/config.json", home_dir_env));
 
         for i in location {
-            settings.merge(File::with_name(&i)
-                .required(false))
-                .unwrap();
+            settings.merge(File::with_name(&i).required(false)).unwrap();
         }
 
         let config = settings
@@ -38,10 +36,7 @@ impl Configuration {
 }
 
 #[cfg(target_os = "linux")]
-fn set_location_linux(
-    location: &mut Vec<String>,
-    home: String
-    ) -> Vec<String> {
+fn set_location_linux(location: &mut Vec<String>, home: String) -> Vec<String> {
     location.push("config.json".to_string());
     location.push("/etc/gt/config.json".to_string());
     location.push(format!("{}/.config/gt/config.json", home));
@@ -50,20 +45,14 @@ fn set_location_linux(
 }
 
 #[cfg(target_os = "macos")]
-fn set_location_macos(
-    location: &mut Vec<String>,
-    home: String
-    ) -> Vec<String> {
+fn set_location_macos(location: &mut Vec<String>, home: String) -> Vec<String> {
     location.push("config.json".to_string());
 
     location.to_vec()
 }
 
 #[cfg(target_os = "windows")]
-fn set_location_windows(
-    location: &mut Vec<String>,
-    home: String
-    ) -> Vec<String> {
+fn set_location_windows(location: &mut Vec<String>, home: String) -> Vec<String> {
     location.push("config.json".to_string());
 
     location.to_vec()
