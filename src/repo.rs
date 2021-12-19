@@ -118,6 +118,8 @@ impl Repository {
         );
 
         map.insert("name", arg_value);
+        map.insert("readme", arg_value);
+        map.insert("description", arg_value);
 
         let response = client.post(url.as_str()).json(&map).send();
 
@@ -152,7 +154,7 @@ impl Repository {
             .unwrap()
             .collect();
         let url = format!(
-            r"{request}/repos/{owner}/{repo}?token={api_token}",
+            "{request}/repos/{owner}/{repo}?token={api_token}",
             request = request.url.as_ref().unwrap(),
             owner = request.authentication.credentials.0.as_ref().unwrap(),
             repo = arg_value[1],
