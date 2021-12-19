@@ -5,6 +5,8 @@ use std::io;
 // not input was validated. What I want to have happen is if there's
 // a failure in input validation, I want the program to tell right away
 // not have the server tell me when I'm doen inputting values
+/// Function to get input from the user. It successfully grabs input but there's
+/// no input validation as the server handles that.
 pub fn get_input(question: String) -> String {
     let result: String;
     loop {
