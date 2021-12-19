@@ -1,6 +1,6 @@
 [package]
 name = "gt"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Wyatt J. Miller <wjmiller2016@gmail.com>"]
 edition = "2018"
 description = "A Gitea CLI client"

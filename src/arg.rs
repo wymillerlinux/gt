@@ -4,7 +4,7 @@ use clap::{App, Arg, SubCommand, ArgMatches};
 /// An error occurs when a command passes through and it doesn't match the argument specified.
 pub fn get_args() -> ArgMatches<'static> {
     let matches = App::new("gt")
-                        .version("0.0.1")
+                        .version("0.0.2")
                         .author("Wyatt J. Miller <wjmiller2016@gmail.com>")
                         .about("It's a Gitea CLI client!")
                         .subcommand(SubCommand::with_name("repo")
