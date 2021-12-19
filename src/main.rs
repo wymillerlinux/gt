@@ -8,6 +8,9 @@ mod config;
 mod issue;
 mod repo;
 mod request;
+mod pr;
+mod user;
+mod util;
 
 use clap::ArgMatches;
 
@@ -48,7 +51,7 @@ fn main() {
 
             // TODO: match expression should be here
             if issue_matches.is_present("create") {
-                issue.create_issue(&config, issue_matches);
+                issue.create_issue(&request);
             }
         }
         _ => println!("Huh?"),
