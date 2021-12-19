@@ -44,7 +44,7 @@ pub fn get_args() -> ArgMatches<'static> {
                                 .arg(Arg::with_name("create")
                                     .short("c")
                                     .long("c")
-                                    .value_names(&["OWNER"])
+                                    .value_names(&["OWNER", "REPO"])
                                     .help("Create an issue for a repository")
                                     )
                                 )
