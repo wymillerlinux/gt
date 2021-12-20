@@ -1,10 +1,11 @@
 use std::collections::HashMap;
 
 use colored::*;
+use git2::Repository as Repo;
 use reqwest::StatusCode;
 use serde_derive::{Deserialize, Serialize};
 
-use crate::request::Request;
+use crate::{request::Request, config::Configuration};
 
 pub struct Repository;
 
@@ -296,5 +297,32 @@ impl Repository {
             },
             Err(e) => panic!("{}", e),
         }
+    }
+
+    pub fn push_to_remote(&self, request: &Request) {
+
+    }
+
+    pub fn pull_from_remote(&self, request: &Request) {
+
+    }
+
+    pub fn clone_from_remote(&self, request: &Request, config: &Configuration) {
+        let arg_value: Vec<&str> = request
+            .arg_value
+            .subcommand()
+            .1
+            .unwrap()
+            .values_of("clone")
+            .unwrap()
+            .collect();
+        let url = format!(
+            "{base}/{owner}/{repo}",
+            base = config.base_url,
+            owner = arg_value[0],
+            repo = arg_value[1]
+        );
+        Repo::clone(url.as_str(), ".").unwrap();
+        println!("Repository successfully cloned!");
     }
 }
