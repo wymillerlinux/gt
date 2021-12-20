@@ -45,6 +45,18 @@ fn main() {
             if repo_matches.is_present("list") {
                 repo.list_repo(&request)
             }
+
+            if repo_matches.is_present("push") {
+                repo.push_to_remote(&request)
+            }
+
+            if repo_matches.is_present("pull") {
+                repo.pull_from_remote(&request)
+            }
+
+            if repo_matches.is_present("clone") {
+                repo.clone_from_remote(&request, &config)
+            }
         }
         ("issue", Some(issue_matches)) => {
             let issue = issue::Issue::new();
