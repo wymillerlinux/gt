@@ -18,10 +18,26 @@ impl Configuration {
         let mut settings = config::Config::default();
         let mut location: Vec<String> = Vec::new();
 
-        // TODO: add condition for target os
-        location.push("config.json".to_string());
-        location.push("/etc/gt/config.json".to_string());
-        location.push(format!("{}/.config/gt/config.json", home_dir_env));
+        match env::consts::OS {
+            // this case is currently untested
+            "windows" => {
+                location.push(String::from("config.json"));
+                location.push(String::from("{:?}/AppData/gt/config.json"))
+            },
+            // this case is currently untested
+            "macos" => {
+                location.push(String::from("config.json"));
+            },
+            "linux" => {
+                location.push(String::from("config.json"));
+                location.push(String::from("/etc/gt/config.json"));
+                location.push(format!("{:?}/.config/gt/config.json", home_dir_env));            
+            },
+            _ => {
+                println!("Unsupported operating system! {:?} might cause some instabilities!", env::consts::OS);
+                location.push(String::from("config.json"));
+            }
+        }
 
         for i in location {
             settings.merge(File::with_name(&i).required(false)).unwrap();
@@ -35,25 +51,8 @@ impl Configuration {
     }
 }
 
-#[cfg(target_os = "linux")]
-fn set_location_linux(location: &mut Vec<String>, home: String) -> Vec<String> {
-    location.push("config.json".to_string());
-    location.push("/etc/gt/config.json".to_string());
-    location.push(format!("{}/.config/gt/config.json", home));
-
-    location.to_vec()
-}
-
-#[cfg(target_os = "macos")]
-fn set_location_macos(location: &mut Vec<String>, home: String) -> Vec<String> {
-    location.push("config.json".to_string());
-
-    location.to_vec()
-}
-
-#[cfg(target_os = "windows")]
-fn set_location_windows(location: &mut Vec<String>, home: String) -> Vec<String> {
-    location.push("config.json".to_string());
-
-    location.to_vec()
+impl Default for Configuration {
+    fn default() -> Self {
+        Self::new()
+    }
 }
