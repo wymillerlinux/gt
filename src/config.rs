@@ -22,7 +22,7 @@ impl Configuration {
             // this case is currently untested
             "windows" => {
                 location.push(String::from("config.json"));
-                location.push(String::from("{:?}/AppData/gt/config.json"))
+                location.push(String::from("{:?}/AppData/Roaming/gt/config.json"))
             },
             // this case is currently untested
             "macos" => {
