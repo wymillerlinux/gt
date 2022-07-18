@@ -16,7 +16,8 @@ use clap::ArgMatches;
 
 fn main() {
     let matches: ArgMatches = arg::get_args();
-    let config = crate::config::Configuration::new();
+    let mut config = crate::config::Configuration::new();
+    config.load_envs();
     let auth = request::Authentication::new(&config);
     let request = auth.request_chooser(config.clone(), matches);
 
@@ -47,11 +48,11 @@ fn main() {
             }
 
             if repo_matches.is_present("push") {
-                repo.push_to_remote(&request)
+                repo.push_to_remote(&request, &config)
             }
 
             if repo_matches.is_present("pull") {
-                repo.pull_from_remote(&request)
+                repo.pull_from_remote(&request, &config)
             }
 
             if repo_matches.is_present("clone") {
