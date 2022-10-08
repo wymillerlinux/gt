@@ -5,6 +5,12 @@ use reqwest::blocking::Client;
 
 use crate::config::Configuration;
 
+pub enum AuthenticationType {
+    BasicAuth,
+    ApiToken,
+    None,
+}
+
 pub struct Request<'a> {
     pub client: Client,
     pub arg_value: ArgMatches<'a>,
@@ -17,6 +23,7 @@ pub struct Authentication {
     pub basic: bool,
     pub api_token: bool,
     pub credentials: (Option<String>, Option<String>),
+    pub auth_type: AuthenticationType,
 }
 
 impl<'a> Request<'a> {
@@ -47,6 +54,17 @@ impl<'a> Request<'a> {
             map: HashMap::new(),
             url: Some(format!("{}{}", config.base_url, config.base_api)),
             authentication: auth,
+        }
+    }
+
+    /// public method that decides whether to format the request url
+    /// based on the authentication written in the config file.
+    /// Returns an integer.
+    pub fn url_request(&self) -> bool {
+        if self.authentication.api_token {
+            true
+        } else {
+            false
         }
     }
 }
@@ -87,6 +105,7 @@ impl Authentication {
             basic: true,
             api_token: false,
             credentials: (Some(user), Some(pass)),
+            auth_type: AuthenticationType::BasicAuth,
         }
     }
 
@@ -98,6 +117,7 @@ impl Authentication {
             basic: false,
             api_token: true,
             credentials: (Some(user), Some(api_token)),
+            auth_type: AuthenticationType::ApiToken,
         }
     }
 
